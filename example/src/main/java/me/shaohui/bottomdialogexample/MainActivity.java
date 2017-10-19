@@ -6,9 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import me.shaohui.bottomdialog.BaseBottomDialog;
 import me.shaohui.bottomdialog.BottomDialog;
 
 public class MainActivity extends AppCompatActivity {
+
+    private BaseBottomDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showDialog() {
-        BottomDialog.create(getSupportFragmentManager())
+        dialog = BottomDialog.create(getSupportFragmentManager())
                 .setViewListener(new BottomDialog.ViewListener() {
                     @Override
                     public void bindView(View v) {
@@ -41,6 +44,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .setLayoutRes(R.layout.dialog_layout)
+                .setChildClickListener(R.id.mRlWechat, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                })
                 .setDimAmount(0.9f)
                 .setTag("BottomDialog")
                 .show();
