@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
+import java.util.HashMap;
 
 /**
  * Created by shaohui on 16/10/11.
  */
-
 public class BottomDialog extends BaseBottomDialog {
 
     private static final String KEY_LAYOUT_RES = "bottom_layout_res";
@@ -26,10 +26,11 @@ public class BottomDialog extends BaseBottomDialog {
 
     private int mHeight = super.getHeight();
 
-    @LayoutRes
-    private int mLayoutRes;
+    @LayoutRes private int mLayoutRes;
 
     private ViewListener mViewListener;
+
+    private HashMap<Integer, View.OnClickListener> mChildClickListeners;
 
     public static BottomDialog create(FragmentManager manager) {
         BottomDialog dialog = new BottomDialog();
@@ -62,6 +63,12 @@ public class BottomDialog extends BaseBottomDialog {
     public void bindView(View v) {
         if (mViewListener != null) {
             mViewListener.bindView(v);
+        }
+        if (mChildClickListeners == null) {
+            return;
+        }
+        for (Integer id : mChildClickListeners.keySet()) {
+            v.findViewById(id).setOnClickListener(mChildClickListeners.get(id));
         }
     }
 
@@ -102,6 +109,17 @@ public class BottomDialog extends BaseBottomDialog {
 
     public BottomDialog setHeight(int heightPx) {
         mHeight = heightPx;
+        return this;
+    }
+
+    public BottomDialog setChildClickListener(int id, View.OnClickListener listener) {
+        if (0 == id || null == listener) {
+            return this;
+        }
+        if (mChildClickListeners == null) {
+            mChildClickListeners = new HashMap<>();
+        }
+        mChildClickListeners.put(id, listener);
         return this;
     }
 
